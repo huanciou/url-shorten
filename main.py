@@ -1,11 +1,21 @@
 from fastapi import FastAPI
+import uvicorn
+from app.url.urls import url
+from typing import Optional
+from pydantic import BaseModel, Field, ValidationError
+from app.combined_lifespan.combined_lifespan import get_combined_lifespan
 
-app = FastAPI()
+app = FastAPI(lifespan=get_combined_lifespan())
 
-@app.get("/")
-def read_root():
-    return {"result": "ok"}
+app.include_router(url, prefix="/url")
 
-@app.get("/users/{user_id}")
-def read_user(user_id: int):
-    return {"user_id": user_id}
+@app.get("/set")
+async def set_value():
+    redis = app.state.redis
+    lua_script_sha = app.state.lua_script_sha
+    result = await redis.evalsha(lua_script_sha, 0, 'set', "a", 1)
+    return {"result": result}
+
+if __name__ == '__main__':
+    print("Starting server on port: 3000 ...")
+    uvicorn.run("main:app", port=3000, reload=True)
