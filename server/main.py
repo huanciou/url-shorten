@@ -33,6 +33,9 @@ async def redis_check():
         keys = await redis.keys("*")
         
         for key in keys:
+            if key.startswith("fastapi-limiter"):
+                continue
+
             lfu_counter = await redis.execute_command('OBJECT', 'FREQ', key)
             
             if lfu_counter is not None:
@@ -40,6 +43,7 @@ async def redis_check():
                     "key": key,
                     "lfu_counter": lfu_counter,
                 }
+                
                 frequency_data.append(frequency_info)
     
         return frequency_data

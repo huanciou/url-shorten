@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    build: ./server
+    ports:
+      - "3000:3000"
+    environment:
+      ENV: production
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: always
+      
+  redis: 
+    build: ./redis
+    ports:
+      - 6380:6379
+    environment:
+      - BIND=redis
+      - PASSWORD= 
+      - DB=0
+    volumes:
+      - ./redis/:/data/
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+    restart: always

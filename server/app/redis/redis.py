@@ -2,10 +2,11 @@ from typing import AsyncIterator
 from redis.asyncio import Redis
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from app.const import *
 import os
 
 async def init_redis_pool() -> Redis:
-    redis = Redis(host='localhost', port=6379, db=0, decode_responses=True)
+    redis = Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
     
     try:
         await redis.ping()
