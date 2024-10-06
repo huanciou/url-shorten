@@ -2,9 +2,7 @@
 
 ## Description
 
-```
-Using FastAPI, design and implement two RESTful HTTP APIs for creating and retrieving short URLs. Optimizing the caching of short URLs with Redis's built-in LFU algorithm to remove less frequently accessed URLs
-```
+> Using FastAPI, design and implement two RESTful HTTP APIs for creating and retrieving short URLs. Optimizing the caching of short URLs with Redis's built-in LFU algorithm to remove less frequently accessed URLs
 
 ## Prerequisite
 
