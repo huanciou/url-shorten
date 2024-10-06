@@ -10,6 +10,12 @@ async def init_redis_pool() -> Redis:
     try:
         await redis.ping()
         print("Redis Connection Successful")
+        maxmemory_policy = await redis.config_set("maxmemory-policy", "volatile-lfu")
+        maxmemory = await redis.config_set("maxmemory", "100mb")
+
+        print(f"Volatile-lfu Policy Status: {maxmemory_policy}")
+        print(f"Maxmemory Setup: {maxmemory}")
+        
     except Exception as e:
         print(f"Redis Connection Failed: {e}")
         raise

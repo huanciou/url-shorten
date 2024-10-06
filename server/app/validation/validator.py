@@ -5,8 +5,7 @@ class OriginalURL(BaseModel):
   original_url: str = Field(..., max_length=2048)
 
 class ShortURL(BaseModel):
-  # pydantic 的 Field 字段錯誤會拋出 ValueError
-  
+  # pydantic 的 Field 字段 error_type: ValueError
   short_url: str = Field(..., pattern=r'^[a-zA-Z0-9]+$')
 
   @field_validator('short_url')

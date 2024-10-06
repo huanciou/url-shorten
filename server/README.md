@@ -11,3 +11,5 @@
 ## Bloom Filter
 
 ## Hash
+
+## Allkeys-LFU
