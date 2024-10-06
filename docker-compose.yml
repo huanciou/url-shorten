@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  web:
+    # build: ./server
+    image: huanciou/url-shorten:web@sha256:aa7e25b4b459690be9408ce61bf6f5f14fe5910c33bd0dbbbdb433e756a5b070
+    ports:
+      - "3000:3000"
+    environment:
+      ENV: production
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: always
+      
+  redis: 
+    # build: ./redis
+    image: huanciou/url-shorten:redis@sha256:108bb3ab40aa94fb7464de4ea723a061ccc99a9cc0869f18f0ea78ef41c98f1e
+    ports:
+      - 6380:6379
+    environment:
+      - BIND=redis
+      - PASSWORD= 
+      - DB=0
+    volumes:
+      - ./redis/:/data/
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+    restart: always
