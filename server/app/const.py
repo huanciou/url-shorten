@@ -3,3 +3,4 @@ RATE_LIMITER_SECONDS = 60
 
 # REDIS_HOST="redis"
 REDIS_HOST="localhost"
+DOMAIN_NAME="http://url_shorten/"

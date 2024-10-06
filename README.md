@@ -1,7 +1,5 @@
 # URl-Shorten
 
-## ASGI Server
-
 ## Pydantic Vadlidation
 
 ## Error Handler
