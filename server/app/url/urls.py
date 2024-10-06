@@ -20,9 +20,9 @@ async def get_bloom_filter(request: Request):
 
 ### GET method
 @url.get("/{url}", dependencies=[Depends(RateLimiter(times=times, seconds=seconds))],
-              tags=["URL Redirection"],
-              summary= "this is a summary", 
-              description= "this is a description")
+               tags=["Redirection"],
+               summary="Redirect Shortened URL to Original URL",
+               description="根據用戶提供的短網址，查詢對應的原始 URL，並進行自動跳轉。系統會針對每次請求進行速率限制，以防止濫用行為。")
 async def get_url(url: str, 
                   redis = Depends(get_redis), 
                   bf = Depends(get_bloom_filter)):
@@ -61,13 +61,13 @@ async def get_url(url: str,
         }
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error retrieving short URL: {e}")
+        raise ServerInternalError(name="Server Internal Error", message=f"Error retrieving short URL: {e}")
 
 ### POST method
 @url.post("/", dependencies=[Depends(RateLimiter(times=100, seconds=60))],
-               tags=["Shorten URL"],
-               summary= "this is a summary", 
-               description= "this is a description")
+                tags=["Create Short URL"],
+                summary="Create a Shortened URL for the Given Long URL",
+                description="此路由負責將用戶提交的長網址轉換為短網址。每分鐘最多允許 100 次請求，以防止過度創建短網址。")
 async def read_url(original_url: OriginalURL, 
                    redis = Depends(get_redis),
                    bf = Depends(get_bloom_filter),
@@ -109,4 +109,5 @@ async def read_url(original_url: OriginalURL,
         }
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error storing short URL: {e}")
+        raise ServerInternalError(name="Server Internal Error", message=f"Error storing short URL: {e}")
+    

@@ -16,13 +16,7 @@ app.add_exception_handler(ServerInternalError, server_interal_error_handler)
 # Routes
 app.include_router(url, prefix="/url_shorten")
 
-# @app.get("/set")
-# async def set_value():
-#     redis = app.state.redis
-#     lua_script_sha = app.state.lua_script_sha
-#     result = await redis.evalsha(lua_script_sha, 0, 'set', "a", 1)
-#     return {"result": result}
-
+# LFU Cache FREQ-Check route
 @app.get("/check", 
          response_model=List[Dict[str, Union[str, int]]])
 async def redis_check():
@@ -43,13 +37,13 @@ async def redis_check():
                     "key": key,
                     "lfu_counter": lfu_counter,
                 }
-                
+
                 frequency_data.append(frequency_info)
     
         return frequency_data
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error retrieving frequency data: {e}")
+         raise ServerInternalError(name="Server Internal Error", message=f"Error retrieving frequency data: {e}")
 
 if __name__ == '__main__':
     print("Starting server on port: 3000 ...")
